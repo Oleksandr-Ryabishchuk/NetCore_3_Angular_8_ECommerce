@@ -85,6 +85,6 @@ namespace BigProject_V_2.Controllers
             }
             return BadRequest("Щось пішло не так. зверніться до оператора технічної підтримки");
         }
-       // Some changes to commit clientapp
+       
     }
 }
