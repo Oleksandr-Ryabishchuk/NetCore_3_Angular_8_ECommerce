@@ -5,22 +5,23 @@ using System.Threading.Tasks;
 using BigProject_V_2.BusinessLayer.Interfaces;
 using BigProject_V_2.DataAccessLayer.Data;
 using BigProject_V_2.DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BigProject_V_2.Controllers
 {
     [Route("api/product")]
-    [ApiController]
+    [ApiController]    
     public class ProductController : ControllerBase
     {
-        private readonly IProductManager _productManager;
-       
+        private readonly IProductManager _productManager;       
         public ProductController(IProductManager productManager)
         {            
             _productManager = productManager;
         }
         [HttpGet]
+        [Authorize(Policy = "RequireLoggedIn")]
         [Route("GetAllProducts")]
         public async Task<IActionResult> GetAllProducts()
         {
@@ -34,6 +35,7 @@ namespace BigProject_V_2.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "RequireAdministratorRole")]
         [Route("AddProduct")]
         public async Task<IActionResult> AddProduct([FromBody]ProductModel model)
         {
@@ -46,8 +48,10 @@ namespace BigProject_V_2.Controllers
             return BadRequest("Щось пішло не так. зверніться до оператора технічної підтримки");
         }
 
+        
         [HttpPut]
-        [Route("UpdateProduct/{id}")]
+        [Authorize(Policy = "RequireAdministratorRole")]
+        [Route("UpdateProduct/{id}")]       
         public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductModel model)
         {
             if (!ModelState.IsValid) 
@@ -65,6 +69,7 @@ namespace BigProject_V_2.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "RequireAdministratorRole")]
         [Route("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {

@@ -34,7 +34,8 @@ namespace BigProject_V_2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddJsonOptions(options => {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddJsonOptions(options =>
+            {
                 var resolver = new JsonSerializerSettings().ContractResolver;
                 if (resolver != null)
                     (resolver as DefaultContractResolver).NamingStrategy = null;
@@ -102,6 +103,12 @@ namespace BigProject_V_2
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("Admin", "Customer", "Moderator").RequireAuthenticatedUser());
+
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,21 +126,21 @@ namespace BigProject_V_2
             }
 
             app.UseCors("EnableCORS");
-
+           
             app.UseHttpsRedirection();
-            
+
+            app.UseRouting();
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-            
+
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
-            }
-
-            app.UseRouting();
+            }           
 
             app.UseEndpoints(endpoints =>
             {

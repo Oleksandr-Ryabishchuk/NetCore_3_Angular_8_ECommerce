@@ -17,7 +17,6 @@ namespace BigProject_V_2.BusinessLayer.Managers
         {
             _unitOfWork = unitOfWork;
         }
-
         public async Task<ProductModel> AddProduct(ProductModel model)
         {
             var product = new ProductModel
@@ -33,13 +32,11 @@ namespace BigProject_V_2.BusinessLayer.Managers
             await _unitOfWork.SaveAsync();
             return product;
         } 
-
         public async Task<IEnumerable<ProductModel>> GetAllProducts()
         {
             var products = await _unitOfWork.GetRepository<ProductModel>().GetAllAsync();
             return products;
         }
-
         public async Task<ProductModel> UpdateProduct(int id, ProductModel model)
         {
             var findProduct = await _unitOfWork.GetRepository<ProductModel>().GetAsync(id);
@@ -54,7 +51,6 @@ namespace BigProject_V_2.BusinessLayer.Managers
             await _unitOfWork.SaveAsync();
             return updated;
         }
-
         public async Task<IEnumerable<ProductModel>> DeleteProduct(int id)
         {
             var product = await _unitOfWork.GetRepository<ProductModel>().GetAsync(id);
