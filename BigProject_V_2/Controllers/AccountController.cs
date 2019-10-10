@@ -94,7 +94,7 @@ namespace BigProject_V_2.Controllers
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
-                return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, username = user.UserName, userRole = roles.FirstOrDefault() });
+                return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, email = user.Email, userName = user.UserName, userRole = roles.FirstOrDefault() });
             }
             ModelState.AddModelError("", "UserName/Password was not found");
             return Unauthorized(new { LoginError = "Будь ласка, перевірте вказані дані" });
