@@ -17,14 +17,14 @@
                 <form class="login-form form" [formGroup]="insertForm" (ngSubmit)="onSubmit()">
                     <div class="form-group">
                         <label for="Email" class="text-uppercase">Електронна адреса</label>
-                        <input formControlName="Email" type="text" class="form-control" placeholder="Email" required autofocus>
+                        <input formControlName="Email" type="text" class="form-control" placeholder="Електронна адреса" required autofocus>
                         <div class="errorMessage" *ngIf='Email.touched && Email.errors'>
                           <span *ngIf="Email.hasError('required')">Електронна адреса обов'язкова</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="Password" class="text-uppercase">Пароль</label>
-                        <input formControlName="Password" type="password" class="form-control" placeholder="Password" required autofocus>
+                        <input formControlName="Password" type="password" class="form-control" placeholder="Пароль" required autofocus>
                         <div  class="errorMessage" *ngIf='Password.touched && Password.errors'>
                           <span *ngIf="Password.hasError('required')">Пароль обов'язковий</span>
                         </div>
@@ -34,7 +34,7 @@
 
                 </form><!-- LOGIN FORM END -->
 
-                <div class="register-text">Не маєте акаунт? <i class="fa fa-user-plus"></i> <a href="#"> Зареєструватися</a></div>
+                <div class="register-text">Не маєте акаунт? <i class="fa fa-user-plus"></i> <a [routerLink]='["/register"]'> Зареєструватися</a></div>
 
                 <div class="copy-text"><i class="fa fa-user-secret"></i><a [routerLink]='["/products"]'>Повернутись до каталогу</a></div>
             </div> <!-- LOGIN SECTION END -->

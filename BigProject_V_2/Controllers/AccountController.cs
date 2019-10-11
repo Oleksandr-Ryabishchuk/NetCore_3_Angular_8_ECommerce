@@ -39,6 +39,7 @@ namespace BigProject_V_2.Controllers
             {
                 UserName = model.UserName,
                 Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
@@ -47,7 +48,7 @@ namespace BigProject_V_2.Controllers
             if(result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
-                return Ok(new { username = user.UserName, email = user.Email, status = 1, message = "Registration Successfull" });
+                return Ok(new { username = user.UserName, phoneNumber = user.PhoneNumber, email = user.Email, status = 1, message = "Registration Successfull" });
             }
             else
             {

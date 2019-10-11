@@ -18,5 +18,9 @@ namespace BigProject_V_2.DataAccessLayer.Dtos
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
     }
 }
