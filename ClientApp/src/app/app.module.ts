@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProductsComponent } from './products/products.component';
 import { HomeComponent } from './home/home.component';
+import { AccountService } from './services/account.service';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     ModalModule.forRoot()
   ],
-  providers: [],
+  providers: [AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

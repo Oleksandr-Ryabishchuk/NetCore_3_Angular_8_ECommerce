@@ -60,11 +60,11 @@ namespace BigProject_V_2
            
             services.AddIdentity<IdentityUser, IdentityRole>(
                 options => {
-                    options.Password.RequireDigit = true;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireUppercase = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 5;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
                     options.User.RequireUniqueEmail = true;
 
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(2);

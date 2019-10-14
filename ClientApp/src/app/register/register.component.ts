@@ -25,10 +25,21 @@ export class RegisterComponent implements OnInit {
   email: FormControl;
   modalRef: BsModalRef;
 
+  errorList: string[];
+
   @ViewChild('template', {static: false}) modal: TemplateRef<any>;
 
   onSubmit() {
-    this.modalRef = this.modalService.show(this.modal);
+    const userDetails = this.insertForm.value;
+
+    this.account.register(userDetails.username, userDetails.phonenumber, userDetails.password, userDetails.email).subscribe(result => {
+
+      this.router.navigate(['/login']);
+    }, error => {
+      console.log(this.errorList);
+    });
+
+    // this.modalRef = this.modalService.show(this.modal);
   }
 
   MustMatch(passwordControl: AbstractControl ): ValidatorFn {
@@ -48,11 +59,12 @@ export class RegisterComponent implements OnInit {
  }
 
   ngOnInit() {
-    this.username = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(5)]);
+    this.username = new FormControl('', [Validators.required, Validators.maxLength(15), Validators.minLength(5)]);
     this.phonenumber = new FormControl('', [Validators.required]);
-    this.password = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(5)]);
+    this.password = new FormControl('', [Validators.required, Validators.maxLength(15), Validators.minLength(5)]);
     this.cpassword = new FormControl('', [Validators.required, this.MustMatch(this.password)]);
-    this.email = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(5)]);
+    this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.errorList = [];
 
     this.insertForm = this.formBuilder.group({
       username: this.username,

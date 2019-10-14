@@ -7,41 +7,47 @@
                 <div class="form-group">
                   <label for="username" class="text-uppercase">Ім'я користувача</label>
                   <input id="username" formControlName="username" type="text" class="form-control" placeholder="Ім'я користувача" required autofocus>
-                  <div class="errorMessage">
-                      <span >Ім'я обов'язкове</span>
+                  <div *ngIf="username.touched && username.errors" class="errorMessage">
+                      <span *ngIf="username.hasError('required')">Ім'я обов'язкове</span>
+                      <span *ngIf="username.hasError('maxlength')">Ім'я користувача може бути не більше 15 знаків</span>
+                      <span *ngIf="username.hasError('minlength')">Ім'я користувача може бути не менше 5 знаків</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="phonenumber" class="text-uppercase">Номер телефону</label>
-                  <input id="phonenumber" formControlName="phonenumber" type="text" class="form-control" placeholder="Номер телефону">
-                  <div  class="errorMessage">
+                  <input id="phonenumber" formControlName="phonenumber" type="text" class="form-control" placeholder="Номер телефону" required>
+                  <div *ngIf="phonenumber.touched && phonenumber.errors"  class="errorMessage">
                       <span >Номер телефону обов'язковий</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="password" class="text-uppercase">Пароль</label>
                   <input id="password" formControlName="password" type="password" class="form-control" placeholder="Пароль" required>
-                  <div  class="errorMessage">
-                      <span >Пароль обов'язковий</span>
+                  <div *ngIf="password.touched && password.errors" class="errorMessage">
+                      <span  *ngIf="password.hasError('required')">Пароль обов'язковий</span>
+                      <span *ngIf="password.hasError('maxlength')">Пароль може бути не більшим ніж 15 знаків</span>
+                      <span *ngIf="password.hasError('minlength')">Щонайменше 5 знаків має містити пароль</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="cpassword" class="text-uppercase">Підтвердіть пароль</label>
                   <input id="cpassword" formControlName="cpassword" type="password" class="form-control" placeholder="Підтвердіть пароль" required>
-                  <div  class="errorMessage">
-                      <span >Пароль має співпадати</span>
-                  </div>
+                  <div *ngIf="cpassword.touched && cpassword.errors" class="errorMessage">
+                    <span *ngIf="cpassword.hasError('required')">Підтвердження паролю обов'язкове</span>
+                    <span *ngIf="cpassword.hasError('mustMatch')">Пароль має співпадати</span>
+                </div>
                 </div>      
                 <div class="form-group">
                   <label for="email" class="text-uppercase">Електронна адреса</label>
-                  <input id="email" formControlName="email" type="text" class="form-control" placeholder="Електронна адреса">
-                  <div  class="errorMessage">
-                      <span >Електронна адреса обов'язкова</span>
-                  </div>
+                  <input id="email" formControlName="email" type="text" class="form-control" placeholder="Електронна адреса" required>
+                  <div *ngIf="email.touched && email.errors" class="errorMessage">
+                    <span *ngIf="email.hasError('required')">Електронна адреса обов'язкова</span>
+                    <span *ngIf="email.hasError('email')">Будь ласка введіть коректну електронну адресу</span>                  
+                </div>
                 </div>
       
                 <div class="form-group">
-                  <input id="register" type="submit" value="Підтвердіть"  class="btn btn-login btn-block" />
+                  <input id="register" type="submit" [disabled]="insertForm.invalid" value="Підтвердіть"  class="btn btn-login btn-block" />
                 </div>
               </form>
       
