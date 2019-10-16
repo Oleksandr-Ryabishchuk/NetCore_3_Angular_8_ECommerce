@@ -66,7 +66,7 @@ namespace BigProject_V_2
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.User.RequireUniqueEmail = true;
-
+                    
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(2);
                     options.Lockout.MaxFailedAccessAttempts = 5;
                     options.Lockout.AllowedForNewUsers = true;

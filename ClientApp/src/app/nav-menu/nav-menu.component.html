@@ -13,17 +13,17 @@
           <li class="nav-item">
             <a class="nav-link text-white" [routerLink]='["/products"]'>Каталог</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white"  [routerLink]='["/login"]'>Увійти</a>
+          <li class="nav-item" *ngIf="!(loginStatus$ | async) as LoginStatus">
+            <a class="nav-link text-white" *ngIf="LoginStatus"  [routerLink]='["/login"]'>Увійти</a>
           </li>
-          <li class="nav-item" >
-            <a class="nav-link text-white"  [routerLink]='["/register"]'>Зареєструватися</a>
+          <li class="nav-item" *ngIf="!(loginStatus$ | async) as LoginStatus">
+            <a class="nav-link text-white" *ngIf="LoginStatus" [routerLink]='["/register"]'>Зареєструватися</a>
           </li>
-          <li class="nav-item" >
-            <a class="nav-link text-danger"></a>
+          <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
+            <a class="nav-link text-warning"  *ngIf="LoginStatus && (UserName$ | async) as UserName"><strong>{{UserName | uppercase}} </strong></a>
           </li>
-          <li class="nav-item" >
-            <a class="btn btn-primary text-white">Вийти</a>
+          <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
+            <a class="btn btn-primary text-white" (click)="onLogout()" *ngIf="LoginStatus">Вийти</a>
           </li>  
         </ul> 
       </div>  

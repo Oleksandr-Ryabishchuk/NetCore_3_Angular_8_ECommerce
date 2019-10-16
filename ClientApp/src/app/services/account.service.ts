@@ -17,6 +17,7 @@ export class AccountService {
 
   private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
   private Email = new BehaviorSubject<string>(localStorage.getItem('email'));
+  private UserName = new BehaviorSubject<string>(localStorage.getItem('username'));
   private UserRole = new BehaviorSubject<string>(localStorage.getItem('userRole'));
 
   register(username: string, phonenumber: string, password: string,  email: string) {
@@ -63,6 +64,10 @@ export class AccountService {
 
   get currentUserEmail() {
     return this.Email.asObservable();
+  }
+
+  get currentUserName() {
+    return this.UserName.asObservable();
   }
 
   get currentUserRole() {

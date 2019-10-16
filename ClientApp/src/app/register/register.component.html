@@ -106,9 +106,9 @@
             </button>
         </div>
         <div class="modal-body text-center">
-          <p class="list-group-item active"></p>
-            <ul class="list-group">
-                <li class="list-group-item"></li>
+          <p class="list-group-item active">{{modalMessage}}</p>
+            <ul class="list-group" *ngFor="let err of errorList">
+                <li class="list-group-item">{{err}}</li>
             </ul>
         </div>
     </ng-template>

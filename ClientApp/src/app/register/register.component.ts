@@ -4,6 +4,7 @@ import { AccountService } from '../services/account.service';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html'
@@ -24,8 +25,8 @@ export class RegisterComponent implements OnInit {
   cpassword: FormControl;
   email: FormControl;
   modalRef: BsModalRef;
-
   errorList: string[];
+  modalMessage: string;
 
   @ViewChild('template', {static: false}) modal: TemplateRef<any>;
 
@@ -35,11 +36,18 @@ export class RegisterComponent implements OnInit {
     this.account.register(userDetails.username, userDetails.phonenumber, userDetails.password, userDetails.email).subscribe(result => {
 
       this.router.navigate(['/login']);
+    // tslint:disable-next-line: no-shadowed-variable
     }, error => {
+      this.errorList = [];
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < error.error.value.length; i++) {
+        this.errorList.push(error.error.value[i]);
+        console.log(error.error.value[i]);
+      }
       console.log(this.errorList);
+      this.modalMessage = 'Введене ім`я або електронна адреса вже зареєстровані';
+      this.modalRef = this.modalService.show(this.modal);
     });
-
-    // this.modalRef = this.modalService.show(this.modal);
   }
 
   MustMatch(passwordControl: AbstractControl ): ValidatorFn {
