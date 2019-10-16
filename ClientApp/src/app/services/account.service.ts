@@ -39,6 +39,8 @@ export class AccountService {
           localStorage.setItem('username', result.userName);
           localStorage.setItem('expiration', result.expiration);
           localStorage.setItem('userRole', result.userRole);
+          this.UserName.next(localStorage.getItem('username'));
+          this.UserRole.next(localStorage.getItem('userRole'));
         }
         return result;
       })
@@ -56,6 +58,11 @@ export class AccountService {
       console.log('Logged Out Successfully');
     }
   checkLoginStatus(): boolean {
+    const loginCookie = localStorage.getItem('loginStatus');
+
+    if (loginCookie === '1') {
+      return true;
+    }
     return false;
   }
   get isLoggedIn() {

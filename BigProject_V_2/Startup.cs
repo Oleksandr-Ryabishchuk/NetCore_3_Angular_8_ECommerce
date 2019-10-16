@@ -76,6 +76,8 @@ namespace BigProject_V_2
            
             services.AddScoped<IProductManager, ProductManager>();
 
+            services.AddScoped<IEmailManager, EmailManager>();
+
             var appsettingsSection = Configuration.GetSection("ApplicationSettings");
 
             services.Configure<ApplicationSettings>(appsettingsSection);
@@ -140,13 +142,13 @@ namespace BigProject_V_2
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
-            }           
-
+            }
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
-
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,

@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     this.account.register(userDetails.username, userDetails.phonenumber, userDetails.password, userDetails.email).subscribe(result => {
 
       this.router.navigate(['/login']);
-    // tslint:disable-next-line: no-shadowed-variable
+
     }, error => {
       this.errorList = [];
       // tslint:disable-next-line: prefer-for-of

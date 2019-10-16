@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BigProject_V_2.BusinessLayer.Interfaces;
 using BigProject_V_2.DataAccessLayer.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,16 @@ namespace BigProject_V_2.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ApplicationSettings _applicationSettings;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<ApplicationSettings> applicationSettings)
+        private readonly IEmailManager _emailManager;
+        public AccountController(UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager, 
+            IOptions<ApplicationSettings> applicationSettings, 
+            IEmailManager emailManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _applicationSettings = applicationSettings.Value;
+            _emailManager = emailManager;
         }
 
         [HttpPost]
@@ -48,7 +54,16 @@ namespace BigProject_V_2.Controllers
             if(result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
-                return Ok(new { username = user.UserName,  phoneNumber = user.PhoneNumber, email = user.Email, status = 1, message = "Registration Successfull" });
+
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var callBackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol: HttpContext.Request.Scheme);
+
+                await _emailManager.SendEmailAsync(user.Email, "SpicyCo.com - Підтвердження реєстрації", 
+                    "Будь ласка підтвердіть вашу електронну адресу за посиланням: <a href=\"" + callBackUrl + "\">натисніть тут</a>");
+
+                return Ok(new { username = user.UserName,   phoneNumber = user.PhoneNumber, 
+                    email = user.Email, status = 1, message = "Registration Successfull" });
             }
             else
             {
@@ -67,14 +82,20 @@ namespace BigProject_V_2.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
-            var roles = await _userManager.GetRolesAsync(user);
-
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_applicationSettings.Secret));
 
             double tokenExpiryTime = Convert.ToDouble(_applicationSettings.ExpireTime);
 
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                if(! await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    ModelState.AddModelError(string.Empty, "Користувач не підтведив електронну адресу");
+                    return Unauthorized(new { LoginError = 
+                        "Ми відправили Вам підтвердження реєстрації на електронну адресую Будь ласка підтвердіть вашу реєстрацію на SpicyCo.com" });                    
+                }
+                var roles = await _userManager.GetRolesAsync(user);
+
                 var tokenHandler = new JwtSecurityTokenHandler();
 
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -97,8 +118,43 @@ namespace BigProject_V_2.Controllers
 
                 return Ok(new { token = tokenHandler.WriteToken(token), expiration = token.ValidTo, email = user.Email, userName = user.UserName, userRole = roles.FirstOrDefault() });
             }
-            ModelState.AddModelError("", "UserName/Password was not found");
+            ModelState.AddModelError("", "Ім'я користувача або пароль не знайдено");
             return Unauthorized(new { LoginError = "Будь ласка, перевірте вказані дані" });
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if( string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                ModelState.AddModelError("", "User Id and Code are required");
+                return BadRequest(ModelState);
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if(user == null)
+            {
+                return new JsonResult("Error");
+            }
+            if (user.EmailConfirmed)
+            {
+                return Redirect("/login");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("EmailConfirmed", "Notifications", new { userId, code });
+            }
+            else
+            {
+                List<string> errors = new List<string>();
+                foreach(var error in result.Errors)
+                {
+                    errors.Add(error.ToString());
+                }
+                return new JsonResult(errors);
+            }
         }
     }
 }

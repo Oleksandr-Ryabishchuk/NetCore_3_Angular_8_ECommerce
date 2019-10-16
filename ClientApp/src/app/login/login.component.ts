@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     },
     error => {
       this.invalidLogin = true;
-      this.ErrorMessage = 'Ви ввели невірні дані';
+      this.ErrorMessage = error.error.loginError;
       console.log(this.ErrorMessage);
     });
   }

@@ -11,5 +11,9 @@ namespace BigProject_V_2.DataAccessLayer.Dtos
         public string Audience { get; set; }
         public string ExpireTime { get; set; }
         public string Secret { get; set; }
+
+        // Sending Grid
+        public string SendGridUser { get; set; }
+        public string SendGridKey { get; set; }
     }
 }
