@@ -10,8 +10,8 @@
           <li class="nav-item">
             <a class="nav-link text-white" [routerLink]='["/"]'>Головна сторінка</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" [routerLink]='["/products"]'>Каталог</a>
+          <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
+            <a class="nav-link text-white" [routerLink]='["/products"]' *ngIf="LoginStatus">Каталог</a>
           </li>
           <li class="nav-item" *ngIf="!(loginStatus$ | async) as LoginStatus">
             <a class="nav-link text-white" *ngIf="LoginStatus"  [routerLink]='["/login"]'>Увійти</a>
