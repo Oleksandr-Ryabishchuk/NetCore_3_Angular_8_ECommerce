@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Product } from 'src/app/interfaces/product';
 import { Observable, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from 'src/app/services/product.service';
+
 
 @Component({
   selector: 'app-product-list',
@@ -12,12 +13,15 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService,
+              private modalService: BsModalService,
+              private formBuilder: FormBuilder) { }
  // For the FormControl - Adding products
  insertForm: FormGroup;
  name: FormControl;
  price: FormControl;
  description: FormControl;
+ outOfStock: FormControl;
  imageUrl: FormControl;
 
  // Updating the Product
@@ -33,6 +37,7 @@ export class ProductListComponent implements OnInit {
  // tslint:disable-next-line: variable-name
  _id: FormControl;
 
+
  // Add modal
   @ViewChild('template', {static: false}) modal: TemplateRef<any>;
 
@@ -47,6 +52,7 @@ export class ProductListComponent implements OnInit {
  products: Product[] = [];
  userRoleStatus: string;
 
+
  // Datatables props
  dtOptions: DataTables.Settings = {};
  dtTrigger: Subject<any> = new Subject();
@@ -54,11 +60,9 @@ export class ProductListComponent implements OnInit {
  @ViewChild(DataTableDirective, {static: false}) dtElement: DataTableDirective;
 
 
-
-
   ngOnInit() {
     this.dtOptions = {
-      pagingType: 'full_nambers',
+      pagingType: 'full_numbers',
       pageLength: 5,
       autoWidth: true,
       order: [[0, 'desc']]
@@ -70,6 +74,27 @@ export class ProductListComponent implements OnInit {
       this.products = result;
       this.dtTrigger.next();
     });
-  }
 
+    // Modal message
+    this.modalMessage = 'Всі поля є обов`язкові';
+
+    // Add product properties
+    const validateImageUrl = '^(https?:\/\/.*\.(?:png|jpg))$';
+
+    this.name = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+    this.price = new FormControl('', [Validators.required, Validators.min(0), Validators.max(100000)]);
+    this.description = new FormControl('', [Validators.required, Validators.maxLength(150)]);
+    this.imageUrl = new FormControl('', [Validators.pattern(validateImageUrl)]);
+
+    this.insertForm = this.formBuilder.group({
+     name: this.name,
+     price: this.price,
+     description: this.description,
+     imageUrl: this.imageUrl,
+     outOfStock: true
+    });
+  }
+  onAddProduct() {
+    this.modalRef = this.modalService.show(this.modal);
+  }
 }

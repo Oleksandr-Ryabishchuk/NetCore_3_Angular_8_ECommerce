@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -58,12 +59,34 @@ export class AccountService {
       console.log('Logged Out Successfully');
     }
   checkLoginStatus(): boolean {
+
     const loginCookie = localStorage.getItem('loginStatus');
 
     if (loginCookie === '1') {
-      return true;
+
+      if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
+          return false;
+      }
+
+      const token = localStorage.getItem('jwt');
+      const decoded = jwt_decode(token);
+
+      if (decoded.exp === undefined) {
+        return false;
+      }
+
+      const date = new Date(0);
+
+      const tokenExpDate = date.setUTCSeconds(decoded.exp);
+
+      if (tokenExpDate.valueOf() > new Date().valueOf()) {
+        return true;
+      }
+      console.log('New Date ' + new Date().valueOf());
+      console.log('Token Date ' + tokenExpDate.valueOf());
+      return false;
     }
-    return false;
+
   }
   get isLoggedIn() {
     return this.loginStatus.asObservable();
@@ -80,4 +103,6 @@ export class AccountService {
   get currentUserRole() {
     return this.UserRole.asObservable();
   }
+
+
 }

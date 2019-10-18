@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <button class="btn btn-warning mb-3 float-right text-uppercase"><i class="fa fa-plus">Додати товар</i></button>
+    <button class="btn btn-warning mb-3 float-right text-uppercase" (click)="onAddProduct()"><i class="fa fa-plus">Додати товар</i></button>
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width: 100%;">
         <thead class="text-center thead-dark">
             <tr>
@@ -22,9 +22,9 @@
                 <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float: right;" width="75"/></td>
                 <td>
                     <div class="btn-group mt-2" role="group">
-                        <button type="button" class="btn btn-success"><i class="fa fa-list"></i></button>
-                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn btn-success"><i class="fas fa-list"></i></button>
+                        <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
