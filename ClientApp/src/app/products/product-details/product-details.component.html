@@ -1,1 +1,53 @@
-<p>product-details works!</p>
+<ng-template #noproduct>
+    <h2>No Product to Display</h2>
+  </ng-template>
+  
+  <div class="container" *ngIf="product;else noproduct">
+    <div class="card">
+      <div class="row">
+        <aside class="col-sm-5 border-right">
+          <article class="gallery-wrap">
+            <div class="img-big-wrap">
+              <div> <a href="#"><img [src]="product.imageUrl" /></a></div>
+            </div> <!-- slider-product.// -->
+            
+          </article> <!-- gallery-wrap .end// -->
+        </aside>
+        <aside class="col-sm-7">
+          <article class="card-body p-5">
+            <h3 class="title mb-3">{{product.name | uppercase}}</h3>
+  
+            <p class="price-detail-wrap">
+              <span class="price h3 text-warning">
+                <span class="currency">UAN </span><span class="num">{{product.price | currency: 'UAH':'symbol-narrow':'.1'}}</span>
+              </span>
+  
+            </p> <!-- price-detail-wrap .// -->
+  
+            <dl class="item-property">
+              <dt class="text-uppercase text-primary"><u>Опис</u></dt>
+              <dd>
+                <p>
+                  {{product.description}}
+                </p>
+              </dd>
+            </dl>
+            <hr>
+  
+            <div class="row">              
+              <div class="col-sm-4">
+                <dl class="param param-feature">
+                  <dt class="text-uppercase text-primary"><u>На складі</u></dt>
+                  <dd>{{true === product.outOfStock? 'Не має': 'В наявності'}}</dd>
+                </dl>  <!-- item-property-hor .// -->
+              </div>
+            </div>
+              
+            <hr>
+            <a href="#" class="btn btn-lg btn-primary text-uppercase"> Купити </a>
+            <a href="#" class="btn btn-lg btn-outline-primary text-uppercase ml-2"> <i class="fas fa-shopping-cart"></i> Додати в кошик </a>
+          </article> <!-- card-body.// -->
+        </aside> <!-- col.// -->
+      </div> <!-- row.// -->
+    </div> <!-- card.// -->
+  </div>

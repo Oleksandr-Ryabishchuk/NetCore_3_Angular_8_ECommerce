@@ -23,7 +23,7 @@ export class AuthGuardService implements CanActivate {
       }
       switch (destination) {
         case '/products':
-         case '/products' + productId: {
+         case '/products/' + productId: {
 
           if (localStorage.getItem('userRole') === 'Customer' ||
            localStorage.getItem('userRole') === 'Admin' ||

@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <button class="btn btn-warning mb-3 float-right text-uppercase" (click)="onAddProduct()"><i class="fa fa-plus">Додати товар</i></button>
+    <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus === 'Admin'" (click)="onAddProduct()"><i class="fas fa-plus">Додати товар</i></button>
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width: 100%;">
         <thead class="text-center thead-dark">
             <tr>
@@ -19,12 +19,12 @@
                 <td>{{product.description}}</td>
                 <td>{{true == product.outOfStock ? 'Ні':'Так'}}</td>
                 <td>{{product.price | currency: 'UAH':'symbol-narrow':'.1'}}</td>
-                <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float: right;" width="75"/></td>
+                <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float: center;" width="225" /></td>
                 <td>
                     <div class="btn-group mt-2" role="group">
-                        <button type="button" class="btn btn-success"><i class="fas fa-list"></i></button>
-                        <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <button type="button" (click)="onSelect(product)" class="btn btn-success"><i class="fas fa-list"></i></button>
+                        <button type="button" *ngIf="userRoleStatus === 'Admin'" (click)="onModalUpdate(product)" class="btn btn-primary"><i class="fas fa-edit"></i></button>
+                        <button type="button" *ngIf="userRoleStatus === 'Admin'" (click)="onDelete(product)" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
@@ -34,37 +34,37 @@
 <!-- ADD PRODUCT MODAL START-->
 <ng-template #template>
         <div class="modal-header">
-          <h4 class="modal-title">ADD NEW PRODUCT</h4>
-          <button type="button" class="close pull-right" aria-label="Close">
+          <h4 class="modal-title">Додати новий товар</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body text-center">
-          <p class="list-group-item active text-center text-uppercase"></p>
-          <form [formGroup]="insertForm">
+          <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
+          <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
             <ul class="list-group">
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id=""><i class="fa fa-pencil-square-o"></i></span>
+                    <span class="input-group-text" id=""><i class="fas fa-edit"></i></span>
                   </div>
-                  <input type="text" id="name" formControlName="name" class="form-control" placeholder="eg: Macbook Air 2019" aria-label="name" aria-describedby="productTitle">
+                  <input type="text" id="name" formControlName="name" class="form-control" placeholder="Введіть назву товару" aria-label="name" aria-describedby="productTitle">
                 </div>
-                <div class="errorMessage" >
-                  <span >Product Name is required.</span>
-                  <span >Only 50 characters allowed for Product Name.</span>
+                <div class="errorMessage" *ngIf="name.touched && name.errors">
+                  <span *ngIf="name.hasError('required')">Назва товару обов'язкова.</span>
+                  <span *ngIf="name.hasError('maxlength')">Назва не може бути більшою за 50 символів.</span>
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="productDescription"><i class="fa fa-pencil-square-o"></i></span>
+                    <span class="input-group-text" id="productDescription"><i class="fas fa-list"></i></span>
                   </div>
-                  <textarea  class="form-control" placeholder="Describe the Product - Max 150 Characters" aria-label="Description" aria-describedby="productDescription"></textarea>
+                  <textarea formControlName="description" class="form-control" placeholder="Опишіть товар - максимум 150 символів" aria-label="Description" aria-describedby="productDescription" ></textarea>
                 </div>
-                <div class="errorMessage" >
-                  <span >Product Description is required.</span>
-                  <span >Only 150 characters allowed for Product Description.</span>
+                <div class="errorMessage" *ngIf="description.touched && description.errors">
+                  <span *ngIf="description.hasError('required')">Опис товару обов'язковий.</span>
+                  <span *ngIf="description.hasError('maxlength')">Опис не може бути більшим за 150 символів.</span>
                 </div>
               </li>
               <li class="list-group-item">
@@ -74,35 +74,32 @@
                       <input type="checkbox" formControlName="outOfStock" checked aria-label="Checkbox for following text input">
                     </div>
                   </div>
-                  <input type="text" class="form-control" placeholder="Product In Stock" disabled>
+                  <input type="text" class="form-control" placeholder="Товар на складі" disabled>
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-usd"></i></span>
+                    <span class="input-group-text"><i class="fas fa-hryvnia"></i></span>
                   </div>
-                  <input formControlName="price" type="text" class="form-control" placeholder="eg: 999.99">
+                  <input formControlName="price" type="text" class="form-control" placeholder="999.9">
                 </div>
-                <div class="errorMessage" >
-                  <span >Product Price is required.</span>
-                  <span >Negative price Not allowed</span>
-                  <span >Max price allowes is 10000</span>
+                <div class="errorMessage" *ngIf="price.touched && price.errors">
+                  <span *ngIf="price.hasError('required')">Ціна обов'язкова.</span>
+                  <span *ngIf="price.hasError('min')">Ціна з негативним значенням не допустима.</span>
+                  <span *ngIf="price.hasError('max')">Максимальна ціна 100000</span>
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
+                    <span class="input-group-text" id="ImageUrl"><i class="fas fa-image"></i></span>
                   </div>
-                  <input type="text" formControlName="imageUrl" class="form-control" placeholder="eg: https://i.imgur.com/ApYPYbQ.jpg" aria-label="ImageUrl" aria-describedby="productTitle">
-                </div>
-                <div class="errorMessage" >
-                  <span >Invalid image url.</span>
-                </div>
+                  <input type="text" formControlName="imageUrl" class="form-control" placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs-1vX0LtE2-EGCSo9yiNCSxY1Am231sIvS6YApKYCsFTlbotJFA" aria-label="ImageUrl" aria-describedby="productTitle">
+                </div>               
               </li>
               <li class="list-group-item">
-                <button   class="btn btn-primary btn-block">ADD</button>
+                <button [disabled]="insertForm.invalid"  class="btn btn-primary btn-block">Додати</button>
               </li>
             </ul>
       
@@ -119,85 +116,82 @@
       
       <ng-template #editTemplate>
         <div class="modal-header">
-          <h4 class="modal-title">EDIT PRODUCT DETAILS</h4>
-          <button type="button" class="close pull-right" aria-label="Close">
+          <h4 class="modal-title">Редагування товару</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body text-center">
-          <p class="list-group-item active text-center text-uppercase"></p>
-          <form [formGroup]="insertForm">
+          <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
+          <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
             <ul class="list-group">
               <li class="list-group-item" [hidden]="_id">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="productId"><i class="fa fa-key"></i></span>
+                    <span class="input-group-text" id="productId"><i class="fas fa-key"></i></span>
                   </div>
-                  <input type="text" class="form-control"/>
+                  <input type="text" class="form-control" formControlName="id"/>
                 </div>
       
               </li>
               <li class="list-group-item">
                   <div class="input-group">
                       <div class="input-group-prepend">
-                          <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+                          <span class="input-group-text" id="productTitle"><i class="fas fa-edit"></i></span>
                       </div>
-                      <input type="text" id="name" class="form-control" placeholder="eg: Macbook Air 2019" aria-label="name" aria-describedby="productTitle">
+                      <input type="text" id="name" formControlName="name" class="form-control" placeholder="Введіть нову назву товару" aria-label="name" aria-describedby="productTitle">
                   </div>
-                  <div  class="errorMessage">
-                      <span >Product Name is required.</span>
-                      <span >Only 50 characters allowed for Product Name.</span>
+                  <div *ngIf="_name.touched && _name.errors" class="errorMessage">
+                      <span *ngIf="_name.hasError('required')">Назва товару обов'язкова.</span>
+                      <span *ngIf="_name.hasError('maxlength')">Назва не може бути більшою за 50 символів.</span>
                   </div>
               </li>
               <li class="list-group-item">
                   <div class="input-group">
                       <div class="input-group-prepend">
-                          <span class="input-group-text" id="productDescription"><i class="fa fa-pencil-square-o"></i></span>
+                          <span class="input-group-text" id="productDescription"><i class="fas fa-list"></i></span>
                       </div>
-                      <textarea  class="form-control" placeholder="Describe the Product - Max 150 Characters" aria-label="Description" aria-describedby="productDescription"></textarea>
+                      <textarea formControlName="description" class="form-control" placeholder="Опишіть товар - максимум 150 символів." aria-label="Description" aria-describedby="productDescription"></textarea>
                   </div>
-                  <div class="errorMessage">
-                      <span >Product Description is required.</span>
-                      <span >Only 150 characters allowed for Product Description.</span>
+                  <div *ngIf="_description.touched && _description.errors" class="errorMessage">
+                      <span *ngIf="_description.hasError('required')">Опис товару обов'язковий.</span>
+                      <span *ngIf="_description.hasError('maxlength')">Опис не може бути більшим за 150 символів.</span>
                   </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <div class="input-group-text">
-                      <input type="checkbox"  checked aria-label="Checkbox for following text input">
+                      <input type="checkbox" formControlName="outOfStock" checked aria-label="Checkbox for following text input">
                     </div>
                   </div>
-                  <input type="text" class="form-control" placeholder="Product In Stock" disabled>
+                  <input type="text" class="form-control" placeholder="Товар на складі" disabled>
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-usd"></i></span>
+                    <span class="input-group-text"><i class="fas fa-hryvnia"></i></span>
                   </div>
-                  <input  type="text" class="form-control" placeholder="eg: 999.99">
+                  <input formControlName="price" type="text" class="form-control" placeholder="999.9">
                 </div>
-                <div  class="errorMessage">
-                    <span >Product Price is required.</span>
-                    <span >Negative price Not allowed</span>
-                    <span >Max price allowes is 10000</span>
+                <div *ngIf="_price.touched && _price.errors" class="errorMessage">
+                    <span *ngIf="_price.hasError('required')">Ціна обов'язкова.</span>
+                    <span *ngIf="_price.hasError('min')">Ціна з негативним значенням не допустима.</span>
+                    <span *ngIf="_price.hasError('max')">Максимальна ціна 100000</span>
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
+                    <span class="input-group-text" id="ImageUrl"><i class="fas fa-image"></i></span>
                   </div>
-                  <input type="text" formControlName="imageUrl" class="form-control" placeholder="eg: https://i.imgur.com/ApYPYbQ.jpg" aria-label="ImageUrl" aria-describedby="productTitle">
+                  <input type="text" formControlName="imageUrl" class="form-control" placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs-1vX0LtE2-EGCSo9yiNCSxY1Am231sIvS6YApKYCsFTlbotJFA" aria-label="ImageUrl" aria-describedby="productTitle">
                 </div>
-                <div 
-                     class="errorMessage">
-                    <span >Invalid image url.</span>
-                </div>
+                
               </li>
               <li class="list-group-item">
-                <button  class="btn btn-primary btn-block">UPDATE</button>
+                <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">UPDATE</button>
               </li>
             </ul>
       
