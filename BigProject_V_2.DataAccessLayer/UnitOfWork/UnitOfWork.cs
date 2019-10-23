@@ -33,7 +33,6 @@ namespace BigProject_V_2.DataAccessLayer.UnitOfWork
 
             disposed = true;
         }
-
         public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {
             if (repositories.ContainsKey(typeof(TEntity)))
@@ -43,20 +42,6 @@ namespace BigProject_V_2.DataAccessLayer.UnitOfWork
             repositories.Add(typeof(TEntity), repository);
             return repository;
         }
-
-        public void Save()
-        {
-            try
-            {
-                _applicationDbContext.SaveChanges();
-            }
-            catch (ValidationException e)
-            {
-
-                throw new ValidationException(e.Message);
-            }
-        }
-
         public async Task<int> SaveAsync()
         {
             try
