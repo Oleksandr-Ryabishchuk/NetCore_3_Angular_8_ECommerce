@@ -55,8 +55,7 @@ export class AccountService {
       localStorage.removeItem('expiration');
       localStorage.removeItem('userRole');
       localStorage.setItem('loginStatus', '0');
-      this.route.navigateByUrl('login');
-      console.log('Logged Out Successfully');
+      this.route.navigateByUrl('home');
     }
   checkLoginStatus(): boolean {
 
@@ -82,8 +81,7 @@ export class AccountService {
       if (tokenExpDate.valueOf() > new Date().valueOf()) {
         return true;
       }
-      console.log('New Date ' + new Date().valueOf());
-      console.log('Token Date ' + tokenExpDate.valueOf());
+
       return false;
     }
 

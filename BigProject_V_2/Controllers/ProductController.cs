@@ -21,7 +21,7 @@ namespace BigProject_V_2.Controllers
             _productManager = productManager;
         }
         [HttpGet]
-        [Authorize(Policy = "RequireLoggedIn")]
+        //[Authorize(Policy = "RequireLoggedIn")]
         [Route("GetAllProducts")]
         public async Task<IActionResult> GetAllProducts()
         {

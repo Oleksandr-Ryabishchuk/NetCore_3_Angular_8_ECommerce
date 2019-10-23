@@ -133,9 +133,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.insertForm.reset();
           this.rerender();
         });
-        console.log('New product added');
-      },
-      error => console.log('Adding new product failed')
+      }
     );
   }
 
@@ -155,8 +153,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.modalRef.hide();
           this.rerender();
         });
-      },
-      error => console.log('Could not Update Product', error)
+      }
     );
   }
   onSelect(product: Product): void {

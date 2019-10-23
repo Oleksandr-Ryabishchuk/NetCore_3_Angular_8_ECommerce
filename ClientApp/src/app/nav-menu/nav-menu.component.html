@@ -8,17 +8,12 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
         <ul class="navbar-nav flex-grow-2">
           <li class="nav-item">
-            <a class="nav-link text-white" [routerLink]='["/"]'>Головна сторінка</a>
+            <a class="nav-link text-white" [routerLink]='["/"]'>Про компанію</a>
           </li>
-          <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
-            <a class="nav-link text-white" [routerLink]='["/products"]' *ngIf="LoginStatus">Каталог</a>
+          <li class="nav-item" >
+            <a class="nav-link text-white" [routerLink]='["/products"]' >Каталог</a>
           </li>
-          <li class="nav-item" *ngIf="!(loginStatus$ | async) as LoginStatus">
-            <a class="nav-link text-white" *ngIf="LoginStatus"  [routerLink]='["/login"]'>Увійти</a>
-          </li>
-          <li class="nav-item" *ngIf="!(loginStatus$ | async) as LoginStatus">
-            <a class="nav-link text-white" *ngIf="LoginStatus" [routerLink]='["/register"]'>Зареєструватися</a>
-          </li>
+         
           <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
             <a class="nav-link text-warning"  *ngIf="(UserName$ | async) as UserName"><strong>{{UserName | uppercase}} </strong></a>
           </li>

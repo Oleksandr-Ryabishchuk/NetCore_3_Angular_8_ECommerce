@@ -17,19 +17,12 @@ export class AuthGuardService implements CanActivate {
       const destination = state.url;
       const productId = route.params.id;
 
-      if (!loginStatus) {
-        this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
-        return false;
-      }
+
       switch (destination) {
         case '/products':
          case '/products/' + productId: {
 
-          if (localStorage.getItem('userRole') === 'Customer' ||
-           localStorage.getItem('userRole') === 'Admin' ||
-           localStorage.getItem('userRole') === 'Moderator') {
-            return true;
-          }
+          return true;
          }
         // tslint:disable-next-line: no-switch-case-fall-through
         case '/product/update': {

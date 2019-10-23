@@ -26,15 +26,11 @@ export class LoginComponent implements OnInit {
     this.account.login(userLogin.Email, userLogin.Password).subscribe(res => {
       const token = (res as any).token;
       this.invalidLogin = false;
-      console.log(token);
-      console.log(res.userRole);
-      console.log(this.returnUrl);
       this.router.navigateByUrl(this.returnUrl);
     },
     error => {
       this.invalidLogin = true;
       this.ErrorMessage = error.error.loginError;
-      console.log(this.ErrorMessage);
     });
   }
 

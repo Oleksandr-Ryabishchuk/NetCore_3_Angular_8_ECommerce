@@ -42,9 +42,7 @@ export class RegisterComponent implements OnInit {
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < error.error.value.length; i++) {
         this.errorList.push(error.error.value[i]);
-        console.log(error.error.value[i]);
       }
-      console.log(this.errorList);
       this.modalMessage = 'Введене ім`я або електронна адреса вже зареєстровані';
       this.modalRef = this.modalService.show(this.modal);
     });
