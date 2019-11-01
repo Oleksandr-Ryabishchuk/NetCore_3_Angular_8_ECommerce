@@ -42,12 +42,15 @@ namespace BigProject_V_2
             });
 
             services.AddControllers().AddNewtonsoftJson();
-
+            services.Configure<IISOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "ClientApp/dist/ClientApp";
             });
 
             services.AddCors(options => 
@@ -105,6 +108,7 @@ namespace BigProject_V_2
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+            
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("Admin", "Customer", "Moderator").RequireAuthenticatedUser());
@@ -126,6 +130,7 @@ namespace BigProject_V_2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
 
             app.UseCors("EnableCORS");
            
