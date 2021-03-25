@@ -24,7 +24,8 @@
                 <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float: center;" width="225" /></td>
                 <td>
                     <div class="btn-group mt-2" role="group">
-                        <button type="button" (click)="onSelect(product)" class="btn btn-success"><i class="fas fa-list"></i></button>
+                        <!--<button type="button" (click)="onSelect(product)" class="btn btn-success"><i class="fas fa-list"></i></button>-->
+                        <button type="button" class="btn btn-primary"><i class="fas fa-shopping cart"></i></button>
                         <button type="button" *ngIf="userRoleStatus === 'Admin'" (click)="onModalUpdate(product)" class="btn btn-primary"><i class="fas fa-edit"></i></button>
                         <button type="button" *ngIf="userRoleStatus === 'Admin'" (click)="onDelete(product)" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                     </div>

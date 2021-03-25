@@ -50,8 +50,8 @@ namespace BigProject_V_2
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist/ClientApp";
-            });
+                configuration.RootPath = "ClientApp/dist";///ClientApp";
+            });//"Data Source=SQL6007.site4now.net;Initial Catalog=DB_A4F3F8_ryabishcuk2;User Id=DB_A4F3F8_ryabishcuk2_admin;Password=kracken12;"
 
             services.AddCors(options => 
             options.AddPolicy("EnableCORS", builder =>
