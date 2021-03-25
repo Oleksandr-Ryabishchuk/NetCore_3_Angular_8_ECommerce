@@ -15,18 +15,20 @@ import { DataTablesModule } from 'angular-datatables';
 import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
 import { JwtInterceptor } from './_dtos/jwt.interceptor';
 import { AuthGuardService } from './guards/auth-guard.service';
+import { CartComponent } from './cart/cart.component';
 
 
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     NavMenuComponent,
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AccessDeniedComponent
-  ],
+    AccessDeniedComponent,
+      CartComponent
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,

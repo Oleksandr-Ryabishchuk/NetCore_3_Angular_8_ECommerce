@@ -7,6 +7,8 @@ import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
+import { Order } from 'src/app/interfaces/order';
+import { CartItem } from 'src/app/interfaces/CartItem';
 
 
 @Component({
@@ -41,8 +43,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
  _imageUrl: FormControl;
  // tslint:disable-next-line: variable-name
  _id: FormControl;
-
-
+ // Cart methods
+ order: Order;
+ cartItem: CartItem;
+ orderSum: number;
  // Add modal
   @ViewChild('template', {static: false}) modal: TemplateRef<any>;
 
@@ -197,4 +201,40 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.dtTrigger.unsubscribe();
   }
+  addCartItem(product: Product) {
+    let item = new CartItem();
+    item.item = product;
+    item.quantity = 1;
+    item.sum = product.price;
+    item.id = 1;
+    this.order.cartItems.push(item);
+    //this.calculateOrderSum(item);
+    this.productService.addItemToCart(item);
+  }
+  calculateOrderSum(item: CartItem){
+    this.order.totalSum += item.sum;
+    return this.order.totalSum
+  }
+  removeItem(item: CartItem) {
+    let index = this.getSelectedIndex(item.id);
+    if(index !== -1){
+      this.order.totalSum -= item.sum;
+      this.order.cartItems.splice(index, 1);
+    }
+  }
+  findInCart(id: number){
+    return this.order.cartItems[this.getSelectedIndex(id)];
+  }
+  private getSelectedIndex(id: number){
+    for(var i = 0; i < this.products.length; i++){
+      if(this.order.cartItems[i].id == id){
+        return i;
+      }
+    }
+    return -1;
+  }
+  discardOrder(){
+     this.order.cartItems.length = 0
+     }
+
 }

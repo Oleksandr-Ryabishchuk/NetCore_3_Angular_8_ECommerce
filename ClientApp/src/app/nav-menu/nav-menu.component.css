@@ -1,0 +1,29 @@
+
+  li {
+    list-style: none;
+  }
+  
+  
+  
+  ul li a {
+    padding-top: 9px;
+    font-size: 1.1rem;
+    color: #ffc107;
+  }
+  
+  ul li a.cart:hover {
+    text-decoration: none;
+    color: #a88007;
+  }
+  
+  ul li a.cart .cart-basket {
+    font-size: .6rem;
+    position: absolute;
+    top: 2px;
+    right: -5px;
+    width: 15px;
+    height: 15px;
+    color: #fff;
+    background-color: #eb4141;
+    border-radius: 50%;
+  }

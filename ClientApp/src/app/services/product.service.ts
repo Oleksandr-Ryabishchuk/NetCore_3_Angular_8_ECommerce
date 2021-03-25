@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../interfaces/product';
 import { shareReplay, flatMap, first } from 'rxjs/operators';
+import { CartItem } from '../interfaces/CartItem';
+import { Order } from '../interfaces/order';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,8 @@ export class ProductService {
   private updateProductUrl = '/api/product/updateproduct/';
 
   private product$: Observable<Product[]>;
+
+  private products: Product[];
 
   getProducts(): Observable<Product[]> {
     if (!this.product$) {
@@ -39,6 +43,11 @@ export class ProductService {
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(this.deleteProductUrl + id);
   }
+  
+  addItemToCart(item: CartItem){
+    localStorage.setItem('cartItem', item.item.name);
+  }
+
   clearCache() {
     this.product$ = null;
   }

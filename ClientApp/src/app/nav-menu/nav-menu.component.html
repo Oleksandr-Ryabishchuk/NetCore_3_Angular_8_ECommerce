@@ -13,6 +13,16 @@
           <li class="nav-item" >
             <a class="nav-link text-white" [routerLink]='["/products"]' >Каталог</a>
           </li>
+          <li class="nav-item px-3 text-uppercase mb-0 position-relative d-lg">
+            <div id="cart" class="d-none">    
+            </div>
+            <a class="cart position-relative d-inline-flex" [routerLink]='["/cart"]'>
+              <i class="fas fa-shopping-cart fa-lg"></i>
+              <span class="cart-basket d-flex align-items-center justify-content-center">
+                0
+              </span>
+            </a>
+          </li>
          
           <li class="nav-item" *ngIf="(loginStatus$ | async) as LoginStatus">
             <a class="nav-link text-warning"  *ngIf="(UserName$ | async) as UserName"><strong>{{UserName | uppercase}} </strong></a>
